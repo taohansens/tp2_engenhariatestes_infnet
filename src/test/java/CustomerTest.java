@@ -1,8 +1,7 @@
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CustomerTest {
     private final CustomerService customerService = new CustomerService();
@@ -34,5 +33,29 @@ public class CustomerTest {
         Customer customer = new Customer(4, "Francisco", "fraanc@gmail.com", 100, true);
         assertFalse(customerService.registerCustomer(customer),
                 "O cadastro não deveria ser permitido para idade acima do máximo (100).");
+    }
+
+    @Test
+    void testUpdateCustomer_ActiveCustomer_ShouldReturnTrue() {
+        Customer activeCustomer = new Customer(1, "Tao", "tao.act@gmail.com", 30, true);
+
+        boolean result = customerService.updateCustomer(activeCustomer, "Hansen", "tao.hansen@example.com", 35);
+
+        assertTrue(result, "O cliente ativo deveria ser atualizado com sucesso.");
+        assertEquals("Hansen", activeCustomer.getName(), "O nome do cliente deveria ser atualizado.");
+        assertEquals("tao.hansen@example.com", activeCustomer.getEmail(), "O e-mail do cliente deveria ser atualizado.");
+        assertEquals(35, activeCustomer.getAge(), "A idade do cliente deveria ser atualizada.");
+    }
+
+    @Test
+    void testUpdateCustomer_InactiveCustomer_ShouldReturnFalse() {
+        Customer inactiveCustomer = new Customer(2, "Tao Inativo", "inactive.tao@gmail.com", 40, false);
+
+        boolean result = customerService.updateCustomer(inactiveCustomer, "Inactive Tao", "inactive.tao@example.com", 45);
+
+        assertFalse(result, "O cliente inativo não deveria ser atualizado.");
+        assertEquals("Tao Inativo", inactiveCustomer.getName(), "O nome do cliente não deveria ser alterado.");
+        assertEquals("inactive.tao@gmail.com", inactiveCustomer.getEmail(), "O e-mail do cliente não deveria ser alterado.");
+        assertEquals(40, inactiveCustomer.getAge(), "A idade do cliente não deveria ser alterada.");
     }
 }
