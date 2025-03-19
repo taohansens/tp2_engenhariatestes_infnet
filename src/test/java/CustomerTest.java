@@ -58,4 +58,22 @@ public class CustomerTest {
         assertEquals("inactive.tao@gmail.com", inactiveCustomer.getEmail(), "O e-mail do cliente não deveria ser alterado.");
         assertEquals(40, inactiveCustomer.getAge(), "A idade do cliente não deveria ser alterada.");
     }
+
+    @Test
+    void testDeleteCustomer_ActiveCustomer_ShouldReturnTrue() {
+        Customer activeCustomer = new Customer(1, "Alexandre", "alexandre.grande@example.com", 30, true);
+
+        boolean result = customerService.deleteCustomer(activeCustomer);
+
+        assertTrue(result, "O cliente ativo deveria ser excluído com sucesso.");
+    }
+
+    @Test
+    void testDeleteCustomer_InactiveCustomer_ShouldReturnFalse() {
+        Customer inactiveCustomer = new Customer(2, "Alexandre Old", "alexandre.old@example.com", 40, false);
+
+        boolean result = customerService.deleteCustomer(inactiveCustomer);
+
+        assertFalse(result, "O cliente inativo não deveria ser excluído.");
+    }
 }
