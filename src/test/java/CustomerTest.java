@@ -76,4 +76,27 @@ public class CustomerTest {
 
         assertFalse(result, "O cliente inativo não deveria ser excluído.");
     }
+
+    @Test
+    void testRegisterCustomer_WithValidEmail_ShouldReturnTrue() {
+        Customer customer = new Customer(1, "Email Valido", "email@example.com", 25, true);
+        assertTrue(customerService.registerCustomer(customer), "O cadastro deveria ser permitido para e-mail válido.");
+    }
+
+    @Test
+    void testRegisterCustomer_WithInvalidEmails_ShouldReturnFalse() {
+        // E-mail sem '@'
+        Customer customer = new Customer(1, "Invalid Email", "emailexample.com", 25, true);
+        assertFalse(customerService.registerCustomer(customer), "O cadastro não deveria ser permitido para e-mail sem '@'.");
+
+        // E-mail sem domínio
+        customer = new Customer(2, "Invalid Email", "email@", 25, true);
+        assertFalse(customerService.registerCustomer(customer), "O cadastro não deveria ser permitido para e-mail sem domínio.");
+    }
+
+    @Test
+    void testRegisterCustomer_WithAllValidFields_ShouldReturnTrue() {
+        Customer customer = new Customer(1, "Tao Hansen", "tao.hansen@teste.com", 30, true);
+        assertTrue(customerService.registerCustomer(customer), "O cadastro deveria ser bem-sucedido com todos os campos válidos.");
+    }
 }
